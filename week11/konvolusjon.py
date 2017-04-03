@@ -23,8 +23,11 @@ def convolution(image, kernel):
   Write a general function to convolve an image with an arbitrary kernel.
   Both image and kernel are tensorflow tensors, return a tensorflow tensor
   """
-
-  return image
+  image = tf.expand_dims(image, 0)
+  kernel = tf.expand_dims(tf.expand_dims(tf.diag(np.array([1, 1, 1], dtype=np.float32)), 0), 0)*\
+           tf.expand_dims(tf.expand_dims(kernel, 2), 2)
+  filtered = tf.nn.conv2d(image, kernel, (1, 1, 1, 1), padding='SAME')
+  return filtered[0, :, :, :]
 
 
 def blur_filter(img):
@@ -33,10 +36,7 @@ def blur_filter(img):
   with kernel size of 11. Img are a tensorflow tensor. Return a tensor as well.
   """
   k_size = 11
-  kernel = np.zeros((k_size, k_size))
-
-  #YOUR CODE
-
+  kernel = np.ones((k_size, k_size))/(k_size**2)
   kernel = tf.convert_to_tensor(np.array(kernel, dtype=np.float32))
   return convolution(img, kernel)
 
@@ -47,9 +47,9 @@ def sobel_filter(img):
   Img are a tensorflow tensor. Return a tensor as well.
   """
   kernel = np.zeros((3, 3))
-
-  #YOUR CODE
-
+  kernel = [[1, 2, 1],
+            [0, 0, 0],
+            [-1, -2, -1]]
   kernel = tf.convert_to_tensor(np.array(kernel, dtype=np.float32))
   return convolution(img, kernel)
 
