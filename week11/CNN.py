@@ -16,12 +16,12 @@ img = tf.placeholder(tf.float32, [None, 32, 32, 3])
 y = tf.placeholder(tf.int32, [None, 10])
 
 #Layer 1
-kernel1 = tf.Variable(tf.random_normal([16*16*3, 100], stddev=2/(49.*3)))
+kernel1 = tf.Variable(tf.random_normal([7, 7, 3, 100], stddev=2/(49.*3)))
 bias1 = tf.Variable(tf.zeros([100]))
 filtered1 = tf.nn.relu(tf.nn.conv2d(img, kernel1, strides=(1,2,2,1), padding='SAME') + bias1)
 
 #Layer 2 fully-connected
-kernel2 = tf.Variable(tf.random_normal([7, 7, 3, 100], stddev=2/(49.*3)))
+kernel2 = tf.Variable(tf.random_normal([16*16*100, 10], stddev=2/(49.*3)))
 bias2 = tf.Variable(tf.zeros([10]))
 filtered2 = tf.matmul(tf.reshape(filtered1, (64, -1)), kernel2)+bias2
 
